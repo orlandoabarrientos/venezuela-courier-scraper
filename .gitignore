@@ -1,0 +1,40 @@
+# CSV de salida y datos generados
+agencias_venezuela.csv
+agencias_venzuela.csv
+oficinas_envios_venezuela.csv
+agencias_zoom_mrw_venezuela.csv
+*.csv
+*.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDEs y Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
