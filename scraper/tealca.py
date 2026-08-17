@@ -6,6 +6,7 @@ CITY_CORRECTIONS = {
     "los-chaguaramos": "Caracas",
     "el-cafetal": "Caracas",
     "ccct-2": "Caracas",
+    "ccct": "Caracas",
     "los-palos-grandes": "Caracas",
     "la-candelaria": "Caracas",
     "el-cementerio": "Caracas",
@@ -43,8 +44,56 @@ CITY_CORRECTIONS = {
     "socopo": "Socopó",
     "alto-barinas": "Barinas",
     "barinas-centro-comercial-barinas": "Barinas",
-    "merida": "Mérida"
+    "merida": "Mérida",
+    "punta-de-mata": "Punta De Mata",
+    "punta-cardon": "Punto Fijo",
+    "tipuro": "Maturín",
+    "maiquetia": "Maiquetía",
+    "san-antonio-de-los-altos": "San Antonio De Los Altos",
+    "tinaquillo": "Tinaquillo",
+    "turmero": "Turmero",
+    "las-delicias": "Maracay",
+    "ciudad-bolivar": "Ciudad Bolívar",
+    "higuerote": "Higuerote"
 }
+
+
+def parse_tealca_map(map_raw, office_name="", city="", state=""):
+    if not map_raw:
+        return "", "", generar_link_maps("", "", f"TEALCA {office_name} {city} {state} Venezuela")
+        
+    lat, lng = "", ""
+    clean_map = clean_text(map_raw)
+    
+    if "<iframe" in map_raw or "iframe" in clean_map:
+        src_match = re.search(r'src=["\']([^"\']+)["\']', map_raw)
+        src_url = src_match.group(1) if src_match else map_raw
+        
+        lat_match = re.search(r'!3d(-?\d+\.\d+)', src_url)
+        lng_match = re.search(r'!2d(-?\d+\.\d+)', src_url)
+        if lat_match and lng_match:
+            lat = lat_match.group(1)
+            lng = lng_match.group(1)
+            return lat, lng, f"https://www.google.com/maps?q={lat},{lng}"
+            
+        coords_match = re.search(r'q=(-?\d+\.\d+),(-?\d+\.\d+)', src_url)
+        if coords_match:
+            lat = coords_match.group(1)
+            lng = coords_match.group(2)
+            return lat, lng, f"https://www.google.com/maps?q={lat},{lng}"
+            
+        return "", "", generar_link_maps("", "", f"TEALCA {office_name} {city} {state} Venezuela")
+        
+    coords_match = re.search(r'q=(-?\d+\.\d+),(-?\d+\.\d+)', map_raw)
+    if coords_match:
+        lat = coords_match.group(1)
+        lng = coords_match.group(2)
+        return lat, lng, f"https://www.google.com/maps?q={lat},{lng}"
+        
+    if map_raw.startswith("http"):
+        return "", "", map_raw
+        
+    return "", "", generar_link_maps("", "", f"TEALCA {office_name} {city} {state} Venezuela")
 
 
 def scrape_tealca():
@@ -99,15 +148,8 @@ def scrape_tealca():
             phone_match = re.search(r"(?:0412|0414|0424|0416|0426|02\d{2})[.\-\s]?\d{3}[.\-\s]?\d{2}[.\-\s]?\d{2}", acerca_raw)
             telefono = phone_match.group(0) if phone_match else ""
             
-            map_url = fields.get("url_google_map", "")
-            lat, lng = "", ""
-            if map_url:
-                coords_match = re.search(r"q=(-?\d+\.\d+),(-?\d+\.\d+)", map_url)
-                if coords_match:
-                    lat = coords_match.group(1)
-                    lng = coords_match.group(2)
-                    
-            maps_url = generar_link_maps(lat, lng, f"{nombre} {ciudad} {estado} Venezuela") if not map_url else map_url
+            map_raw = fields.get("url_google_map", "")
+            lat, lng, maps_url = parse_tealca_map(map_raw, nombre_raw, ciudad, estado)
             
             oficinas.append({
                 "Empresa": "TEALCA",
