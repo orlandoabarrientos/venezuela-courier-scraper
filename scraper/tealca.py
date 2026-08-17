@@ -66,7 +66,7 @@ def parse_tealca_map(map_raw, office_name="", city="", state=""):
     clean_map = clean_text(map_raw)
     
     if "<iframe" in map_raw or "iframe" in clean_map:
-        src_match = re.search(r'src=["\']([^"\']+)["\']', map_raw)
+        src_match = re.search(r'src=["\'](.*?)["\']', map_raw)
         src_url = src_match.group(1) if src_match else map_raw
         
         lat_match = re.search(r'!3d(-?\d+\.\d+)', src_url)
@@ -146,7 +146,7 @@ def scrape_tealca():
                 direccion = f"Oficina TEALCA {nombre_raw}, {ciudad}, Estado {estado}"
                 
             phone_match = re.search(r"(?:0412|0414|0424|0416|0426|02\d{2})[.\-\s]?\d{3}[.\-\s]?\d{2}[.\-\s]?\d{2}", acerca_raw)
-            telefono = phone_match.group(0) if phone_match else ""
+            telefono = phone_match.group(0) if phone_match else "0500-TEALCA-0 (0-500-832-5220) / (0212) 273.00.00"
             
             map_raw = fields.get("url_google_map", "")
             lat, lng, maps_url = parse_tealca_map(map_raw, nombre_raw, ciudad, estado)

@@ -42,7 +42,8 @@ def print_summary(oficinas, elapsed_time=0.0):
 
 
 def main():
-    csv_file = "agencias_venezuela.csv"
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    csv_file = os.path.join(base_dir, "agencias_venezuela.csv")
     
     if os.path.exists(csv_file):
         try:

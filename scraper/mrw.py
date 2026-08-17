@@ -28,7 +28,6 @@ def scrape_mrw():
             lng = clean_text(item.get("longitud", ""))
             
             ciudad = nombre_raw.title()
-            
             maps_url = generar_link_maps(lat, lng, f"{nombre} {estado} Venezuela")
             
             oficinas.append({
@@ -38,7 +37,7 @@ def scrape_mrw():
                 "Estado": estado,
                 "Ciudad": ciudad,
                 "Direccion": direccion,
-                "Telefono": "",
+                "Telefono": "0500-MRW-0000 (0-500-679-0000) / (0212) 204.00.00",
                 "Horario": "Lun - Vie: 08:00 AM - 05:00 PM",
                 "Latitud": lat,
                 "Longitud": lng,

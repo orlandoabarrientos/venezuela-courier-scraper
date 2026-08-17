@@ -60,7 +60,7 @@ def scrape_liberty():
             
             phone_list = contact.get("phone", [])
             phones = [clean_text(p) for p in phone_list if clean_text(p)]
-            telefono = ", ".join(phones) if phones else ""
+            telefono = ", ".join(phones) if phones else "0500-LIBERTY (0-500-542-3789) / (0212) 700.03.00"
             
             horario = parse_liberty_hours(datos.get("horario", {}))
             
